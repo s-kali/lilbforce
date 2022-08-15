@@ -1,7 +1,16 @@
 import requests
+from bs4 import BeautifulSoup
 
-payload = {'username':'admin', 'password':'', 'Login': 'Login', 'user_token':''}
+url = 'http://172.17.0.2/vulnerabilities/brute/'
+#payload = {'username':'admin', 'password':'', 'Login': 'Login', 'user_token':''}
 
-r = requests.get('http://172.17.0.2/vulnerabilities/brute/', params=payload)
+session = requests.Session()
+response = session.get(url)
 
-print(r.text)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+for name in soup.find_all('input'):
+	if(name.get('name')=='user_token'):
+		user_token = name.get('value')
+
+print(user_token)
